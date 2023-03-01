@@ -6,6 +6,7 @@ My solution introduces micro-service application containing 3 services.
 - Authentication-service
 - Postgre server
 
+![alt text](https://github.com/brudnevskij/gambitChallenge/blob/main/architechture.png "architechture")
 Application is now configured to run in one minikube kluster, exposing broker-service as a load balancer. During development steps docker-compose was used mainly.
 
 ## Service description
