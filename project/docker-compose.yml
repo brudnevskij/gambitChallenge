@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  databroker-service:
+    build:
+      context: ./../broker-service
+      dockerfile: ./broker-service.dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      RPC_DATA_API: "dataconverter-service:5001"
+  
+  dataconverter-service:
+    build:
+      context: ./../dataconverter-service
+      dockerfile: ./dataconverter-service.dockerfile
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DATA_API: "http://tuftuf.gambitlabs.fi/feed.txt"

@@ -8,30 +8,33 @@ import (
 	"strings"
 )
 
-type RPCServer struct{}
+func (app *Config) GetData(rw http.ResponseWriter, r *http.Request) {
+	var jsonPayload jsonResponse
 
-func (r *RPCServer) GetDataRPC(args string, resp *HumanReadableData) error {
 	//getting data from API
-	request, err := http.NewRequest(http.MethodGet, "http://tuftuf.gambitlabs.fi/feed.txt", nil)
+	request, err := http.NewRequest(http.MethodGet, app.dataApi, nil)
 	if err != nil {
-		// app.errorLog.Print("Could not create client")
-		// app.errorLog.Print(err)
+		app.errorLog.Print("Could not create client")
+		app.errorLog.Print(err)
+		app.errorJSON(rw, err, http.StatusInternalServerError)
 	}
 
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
-		// app.errorLog.Print("Could not do request")
-		// app.errorLog.Print(err)
+		app.errorLog.Print("Could not do request")
+		app.errorLog.Print(err)
+		app.errorJSON(rw, err, http.StatusInternalServerError)
 	}
 	defer response.Body.Close()
 
 	//Parsing data
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		// app.errorLog.Print("DUDE")
+		app.errorLog.Print("Could not read body of a request")
+		app.errorLog.Print(err)
+		app.errorJSON(rw, err, http.StatusInternalServerError)
 	}
-	// fmt.Println(string(body))
 
 	data := strings.Split(string(body), "\n")
 	data = data[1 : len(data)-1]
@@ -45,7 +48,7 @@ func (r *RPCServer) GetDataRPC(args string, resp *HumanReadableData) error {
 
 	fmt.Println(parsedData)
 	//populating struct
-	*resp = HumanReadableData{
+	responsePayload := HumanReadableData{
 		FlowRate:                      convertReal4(parsedData[0], parsedData[1]),
 		EnergyFlowRate:                convertReal4(parsedData[2], parsedData[3]),
 		Velocity:                      convertReal4(parsedData[4], parsedData[5]),
@@ -96,5 +99,8 @@ func (r *RPCServer) GetDataRPC(args string, resp *HumanReadableData) error {
 		ReynoldsNumber:        convertReal4(parsedData[98], parsedData[99]),
 	}
 
-	return nil
+	jsonPayload.Error = false
+	jsonPayload.Message = "Data Delivered"
+	jsonPayload.Data = responsePayload
+	app.writeJSON(rw, http.StatusAccepted, jsonPayload)
 }
