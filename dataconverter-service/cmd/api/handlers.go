@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -12,6 +11,7 @@ func (app *Config) GetData(rw http.ResponseWriter, r *http.Request) {
 	var jsonPayload jsonResponse
 
 	//getting data from API
+
 	request, err := http.NewRequest(http.MethodGet, app.dataApi, nil)
 	if err != nil {
 		app.errorLog.Print("Could not create client")
@@ -46,7 +46,6 @@ func (app *Config) GetData(rw http.ResponseWriter, r *http.Request) {
 		parsedData[i] = buffer
 	}
 
-	fmt.Println(parsedData)
 	//populating struct
 	responsePayload := HumanReadableData{
 		FlowRate:                      convertReal4(parsedData[0], parsedData[1]),
@@ -73,30 +72,30 @@ func (app *Config) GetData(rw http.ResponseWriter, r *http.Request) {
 		CurrentInputA13:               convertReal4(parsedData[42], parsedData[43]),
 		CurrentInputA13_2:             convertReal4(parsedData[44], parsedData[45]),
 		CurrentInputA13_3:             convertReal4(parsedData[46], parsedData[47]),
-		// SystemPassword: , TODO: BCD conversion
-		// PasswordForHardware: ,
-		// Calendar: ,
-		// DayHourAutoSave: ,
-		KeyToInput:            int16(parsedData[58]),
-		GoToWindow:            int16(parsedData[59]),
-		LCDLights:             int16(parsedData[60]),
-		TimesForBeeper:        int16(parsedData[61]),
-		PulsesLeftForOCT:      int16(parsedData[61]),
-		ErrorCode:             int8(parsedData[71]),
-		PT100ResistanceInlet:  convertReal4(parsedData[76], parsedData[77]),
-		PT100ResistanceOutlet: convertReal4(parsedData[78], parsedData[79]),
-		TotalTravelTime:       convertReal4(parsedData[80], parsedData[81]),
-		DeltaTravelTime:       convertReal4(parsedData[82], parsedData[83]),
-		UpstreamTravelTime:    convertReal4(parsedData[84], parsedData[85]),
-		DownStreamTravelTime:  convertReal4(parsedData[86], parsedData[87]),
-		OutputCurrent:         convertReal4(parsedData[88], parsedData[89]),
-		WorkingStep:           int8(parsedData[91] >> 8),
-		SignalQuality:         int8(parsedData[91]),
-		UpstreamStrength:      int16(parsedData[92]),
-		DownStreamStrength:    int16(parsedData[93]),
-		Language:              int16(parsedData[95]),
-		RateOfTravelTime:      convertReal4(parsedData[96], parsedData[97]),
-		ReynoldsNumber:        convertReal4(parsedData[98], parsedData[99]),
+		SystemPassword:                convertSysPas(parsedData[48], parsedData[49]),
+		PasswordForHardware:           convertHWPas(parsedData[50]),
+		Calendar:                      convertSMHDMY(parsedData[52], parsedData[53], parsedData[54]),
+		DayHourAutoSave:               converDTAutosave(parsedData[55]),
+		KeyToInput:                    int16(parsedData[58]),
+		GoToWindow:                    int16(parsedData[59]),
+		LCDLights:                     int16(parsedData[60]),
+		TimesForBeeper:                int16(parsedData[61]),
+		PulsesLeftForOCT:              int16(parsedData[61]),
+		ErrorCode:                     int8(parsedData[71]),
+		PT100ResistanceInlet:          convertReal4(parsedData[76], parsedData[77]),
+		PT100ResistanceOutlet:         convertReal4(parsedData[78], parsedData[79]),
+		TotalTravelTime:               convertReal4(parsedData[80], parsedData[81]),
+		DeltaTravelTime:               convertReal4(parsedData[82], parsedData[83]),
+		UpstreamTravelTime:            convertReal4(parsedData[84], parsedData[85]),
+		DownStreamTravelTime:          convertReal4(parsedData[86], parsedData[87]),
+		OutputCurrent:                 convertReal4(parsedData[88], parsedData[89]),
+		WorkingStep:                   int8(parsedData[91] >> 8),
+		SignalQuality:                 int8(parsedData[91]),
+		UpstreamStrength:              int16(parsedData[92]),
+		DownStreamStrength:            int16(parsedData[93]),
+		Language:                      int16(parsedData[95]),
+		RateOfTravelTime:              convertReal4(parsedData[96], parsedData[97]),
+		ReynoldsNumber:                convertReal4(parsedData[98], parsedData[99]),
 	}
 
 	jsonPayload.Error = false

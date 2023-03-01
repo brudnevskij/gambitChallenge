@@ -26,6 +26,7 @@ var app Config = Config{
 
 func main() {
 
+	//Code comented here starts a HTTP server
 	// srv := &http.Server{
 	// 	Addr:    fmt.Sprintf(":%d", app.webPort),
 	// 	Handler: app.routes(),

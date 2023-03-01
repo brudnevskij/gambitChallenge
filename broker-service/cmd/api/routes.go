@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 )
 
@@ -20,9 +19,7 @@ func (app *Config) routes() http.Handler {
 		MaxAge:           300,
 	}))
 
-	mux.Use(middleware.Heartbeat("/ping"))
-
-	mux.Get("/data", app.getDataViaRpc)
+	mux.Post("/data", app.getDataViaRpc)
 
 	return mux
 }
