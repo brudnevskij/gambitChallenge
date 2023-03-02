@@ -17,7 +17,7 @@ type Config struct {
 }
 
 var app Config = Config{
-	webPort:  8008,
+	webPort:  80,
 	rpcPort:  5001,
 	dataApi:  os.Getenv("DATA_API"),
 	infoLog:  log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),

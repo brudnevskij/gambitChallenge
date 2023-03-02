@@ -8,12 +8,13 @@ services:
       dockerfile: ./broker-service.dockerfile
     restart: always
     ports:
-      - "8080:80"
+      - "8080:8080"
     deploy:
       mode: replicated
       replicas: 1
     environment:
       RPC_DATA_API: "dataconverter-service:5001"
+      AUTH_API: "http://authentication-service/authenticate"
   
   dataconverter-service:
     build:

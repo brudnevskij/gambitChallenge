@@ -18,9 +18,9 @@ type Config struct {
 func main() {
 	//Configuring application
 	app := Config{
-		webPort:  80,
+		webPort:  8080,
 		rpcApi:   os.Getenv("RPC_DATA_API"),
-		authApi:  "http://authentication-service/authenticate",
+		authApi:  os.Getenv("AUTH_API"),
 		errorLog: log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
 		infoLog:  log.New(os.Stdout, "INFO\t", log.Ltime|log.Ldate),
 	}
